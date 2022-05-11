@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+import './widgets/user_transactions.dart';
+
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,10 +29,7 @@ class MyApp extends StatelessWidget {
                   elevation: 5,
                 ),
               ),
-              const Card(
-                color: Colors.red,
-                child: Text('LIST OF TX'),
-              ),
+              UserTransactions(),
             ],
           )),
     );
