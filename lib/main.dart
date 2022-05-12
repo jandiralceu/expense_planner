@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Chart(_transactions),
                   ),
@@ -90,9 +90,10 @@ class _MyAppState extends State<MyApp> {
         ),
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: const TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold),
+                fontSize: 18,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+              ),
             ),
       ),
     );

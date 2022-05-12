@@ -8,13 +8,16 @@ class NoTransactions extends StatelessWidget {
     return Column(
       children: [
         const Text('No content available'),
-        const SizedBox(height: 10,),
-        Container(
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
           height: 200,
-            child: Image.asset(
-          'assets/images/waiting.png',
-          fit: BoxFit.cover,
-        ))
+          child: Image.asset(
+            'assets/images/waiting.png',
+            fit: BoxFit.cover,
+          ),
+        )
       ],
     );
   }
