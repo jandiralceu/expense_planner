@@ -17,13 +17,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<Transaction> _transactions = [];
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime date) {
     setState(() {
       _transactions.add(Transaction(
         id: DateTime.now().toString(),
         title: title,
         amount: amount,
-        date: DateTime.now(),
+        date: date,
       ));
     });
   }
@@ -38,6 +38,12 @@ class _MyAppState extends State<MyApp> {
             behavior: HitTestBehavior.opaque,
           );
         });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((transaction) => transaction.id == id);
+    });
   }
 
   @override
@@ -57,14 +63,10 @@ class _MyAppState extends State<MyApp> {
             ),
             body: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: Chart(_transactions),
-                  ),
-                  TransactionList(_transactions),
+                  Chart(_transactions),
+                  TransactionList(_transactions, _deleteTransaction),
                 ],
               ),
             ),
