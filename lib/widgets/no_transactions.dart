@@ -9,7 +9,7 @@ class NoTransactions extends StatelessWidget {
       children: [
         const Text('No content available'),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
         SizedBox(
           height: 200,

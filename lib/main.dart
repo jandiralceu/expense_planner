@@ -48,25 +48,39 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text('Personal Expenses'),
+      actions: [
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: const Icon(Icons.add),
+        ),
+      ],
+    );
+
     return MaterialApp(
       home: Builder(
         builder: (BuildContext context) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text('Personal Expenses'),
-              actions: [
-                IconButton(
-                  onPressed: () => _startAddNewTransaction(context),
-                  icon: const Icon(Icons.add),
-                ),
-              ],
-            ),
+            appBar: appBar,
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Chart(_transactions),
-                  TransactionList(_transactions, _deleteTransaction),
+                  SizedBox(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.3,
+                    child: Chart(_transactions),
+                  ),
+                  SizedBox(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child:
+                          TransactionList(_transactions, _deleteTransaction)),
                 ],
               ),
             ),
