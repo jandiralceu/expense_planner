@@ -8,7 +8,10 @@ class NoTransactions extends StatelessWidget {
     return LayoutBuilder(builder: (ctx, constraints) {
       return Column(
         children: [
-          const Text('No content available'),
+          Text(
+            'No content available',
+            style: Theme.of(context).textTheme.headline6,
+          ),
           const SizedBox(
             height: 20,
           ),
