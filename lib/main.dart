@@ -5,17 +5,57 @@ import './models/transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/transaction_create.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
+void main() {
+  // To set de default orientation.
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
+  runApp(const App());
 }
 
-class _MyAppState extends State<MyApp> {
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const ExpensePlanner(),
+      theme: ThemeData(
+        fontFamily: 'Quicksand',
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontFamily: 'OpenSans',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: const TextStyle(
+                fontSize: 18,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+      ),
+    );
+  }
+}
+
+class ExpensePlanner extends StatefulWidget {
+  const ExpensePlanner({Key? key}) : super(key: key);
+
+  @override
+  State<ExpensePlanner> createState() => _ExpensePlannerState();
+}
+
+class _ExpensePlannerState extends State<ExpensePlanner> {
   final List<Transaction> _transactions = [];
+
+  var _showChart = false;
 
   void _addNewTransaction(String title, double amount, DateTime date) {
     setState(() {
@@ -48,6 +88,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandScape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appBar = AppBar(
       title: const Text('Personal Expenses'),
       actions: [
@@ -58,59 +101,62 @@ class _MyAppState extends State<MyApp> {
       ],
     );
 
-    return MaterialApp(
-      home: Builder(
-        builder: (BuildContext context) {
-          return Scaffold(
-            appBar: appBar,
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+    final transactionListWidget = SizedBox(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(_transactions, _deleteTransaction),
+    );
+
+    return Scaffold(
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (isLandScape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: (MediaQuery.of(context).size.height -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.3,
-                    child: Chart(_transactions),
+                  Text(
+                    _showChart ? 'Hide Chart' : 'Show Chart',
                   ),
-                  SizedBox(
+                  Switch(
+                      value: _showChart,
+                      onChanged: (value) {
+                        setState(() {
+                          _showChart = value;
+                        });
+                      }),
+                ],
+              ),
+            if (!isLandScape)
+              SizedBox(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(_transactions),
+              ),
+            if (!isLandScape) transactionListWidget,
+            if (isLandScape)
+              _showChart
+                  ? SizedBox(
                       height: (MediaQuery.of(context).size.height -
                               appBar.preferredSize.height -
                               MediaQuery.of(context).padding.top) *
                           0.7,
-                      child:
-                          TransactionList(_transactions, _deleteTransaction)),
-                ],
-              ),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context),
-            ),
-          );
-        },
-      ),
-      theme: ThemeData(
-        fontFamily: 'Quicksand',
-        primarySwatch: Colors.purple,
-        accentColor: Colors.amber,
-        appBarTheme: const AppBarTheme(
-          titleTextStyle: TextStyle(
-            fontSize: 20,
-            fontFamily: 'OpenSans',
-            fontWeight: FontWeight.bold,
-          ),
+                      child: Chart(_transactions),
+                    )
+                  : transactionListWidget
+          ],
         ),
-        textTheme: ThemeData.light().textTheme.copyWith(
-              headline6: const TextStyle(
-                fontSize: 18,
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(context),
       ),
     );
   }

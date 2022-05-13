@@ -16,7 +16,7 @@ class TransactionList extends StatelessWidget {
     return transactions.isEmpty
         ? const NoTransactions()
         : ListView.builder(
-            itemBuilder: (context, index) {
+            itemBuilder: (ctx, index) {
               return Card(
                 margin: const EdgeInsets.symmetric(
                   vertical: 8,
